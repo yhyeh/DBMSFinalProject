@@ -37,6 +37,8 @@ typedef union {
 
 typedef struct Command {
     unsigned char type;
+	unsigned char type_table; 
+	// 1 -> users // 2 -> likes // 3 -> join
     char **args;
     size_t args_len;
     size_t args_cap;

@@ -225,6 +225,7 @@ int parse_input(char *input, Command_t *cmd) {
     char *token;
     int idx;
     token = strtok(input, " ,\n");
+	cmd->type_table = 0;
 	if(token == NULL){
 		cmd->type = UNRECOG_CMD;
 		return cmd->type;
@@ -235,6 +236,16 @@ int parse_input(char *input, Command_t *cmd) {
         }
     }
     while (token != NULL) {
+		if (!strncmp(token,"join",4))
+			cmd->type_table = 3;
+		if (cmd->type_table == 0){
+			if (!strncmp(token,"user",4)){
+				cmd->type_table = 1;
+			}
+			else if (!strncmp(token,"like",4)){
+				cmd->type_table=2;
+			}
+		}
         add_Arg(cmd, token);
         token = strtok(NULL, " ,\n");
     }
@@ -308,7 +319,7 @@ int handle_delete_cmd(Table_t *table, Command_t *cmd) {
 	
 	cmd->cmd_args.sel_args.where_begin = -1;
 	cmd->cmd_args.sel_args.where_end = -1;
-	if(strncmp(cmd->args[1], "from", 4) || strncmp(cmd->args[2], "table", 5)){
+	if(strncmp(cmd->args[1], "from", 4) || strncmp(cmd->args[2], "user", 4)){
 		cmd->type = UNRECOG_CMD;
         return ret;
 	}
@@ -357,7 +368,7 @@ int handle_update_cmd(Table_t *table, Command_t *cmd) {
 	cmd->cmd_args.sel_args.where_begin = -1;
 	cmd->cmd_args.sel_args.where_end = -1;
 	
-	if(strncmp(cmd->args[1], "table", 5) || strncmp(cmd->args[2], "set", 3)){
+	if(strncmp(cmd->args[1], "user", 4) || strncmp(cmd->args[2], "set", 3)){
 		cmd->type = UNRECOG_CMD;
         return ret;
 	}
