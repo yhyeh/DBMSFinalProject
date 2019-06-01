@@ -17,7 +17,7 @@ CMD_t cmd_list[] = {
 Command_t* new_Command() {
     Command_t *cmd = (Command_t*) malloc(sizeof(Command_t));
     memset(cmd, 0, sizeof(Command_t));
-	cmd->type_table = 0;
+    cmd->type_table = UNRECOG_TB;
     cmd->type = UNRECOG_CMD;
     cmd->args = NULL;
     cmd->args_len = 0;
@@ -102,4 +102,3 @@ void cleanup_Command(Command_t *cmd) {
     cmd->type = UNRECOG_CMD;
     cmd->args_len = 0;
 }
-

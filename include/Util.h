@@ -3,6 +3,25 @@
 #include "Command.h"
 #include "Table.h"
 
+enum cond_stat{
+  COND,
+  OP,
+  VALUE,
+  LOGIC
+};
+enum logical_ops{
+  OR,
+  AND
+};
+enum relational_ops{
+  EQ,
+  NEQ,
+  LTE,
+  GTE,
+  LT,
+  GT
+};
+
 typedef struct State {
     int saved_stdout;
 } State_t;

@@ -1,10 +1,17 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-enum { 
+enum {
     UNRECOG_CMD,
     BUILT_IN_CMD,
     QUERY_CMD,
+};
+
+enum table_types{
+  UNRECOG_TB,
+  USER_TB,
+  LIKE_TB,
+  JOIN_TB
 };
 
 enum {
@@ -37,8 +44,7 @@ typedef union {
 
 typedef struct Command {
     unsigned char type;
-	unsigned char type_table; 
-	// 1 -> users // 2 -> likes // 3 -> join
+	unsigned char type_table;
     char **args;
     size_t args_len;
     size_t args_cap;

@@ -5,6 +5,13 @@
 #define MAX_USER_NAME 255
 #define MAX_USER_EMAIL 255
 
+enum user_fields{
+  ID,
+  NAME,
+  EMAIL,
+  AGE
+};
+
 typedef struct User {
     unsigned int id;
     char name[MAX_USER_NAME+1];

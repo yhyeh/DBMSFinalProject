@@ -37,10 +37,10 @@ int main(int argc, char **argv) {
 				printf("Unrecognized command '%s'.\n", input_buffer->buffer);
 		}
 		else{
-			if(cmd->type_table == 1){
+			if(cmd->type_table == USER_TB){
 				handle_query_cmd(table_user, cmd);
 			}
-			else if(cmd->type_table == 2){
+			else if(cmd->type_table == LIKE_TB){
 				handle_query_cmd_like(table_like, cmd);
 			}
 		}
