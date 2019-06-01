@@ -9,6 +9,7 @@
 #include "Command.h"
 #include "Table_Like.h"
 #include "SelectState.h"
+#include "Util.h"
 
 ///
 /// Print the like in the specific format
@@ -19,7 +20,7 @@ void print_like(Like_t *like, SelectArgs_t *sel_args) {
     for (idx = 0; idx < sel_args->fields_len; idx++) {
         if (!strncmp(sel_args->fields[idx], "*", 1)) {
             printf("%d, %d", like->id1, like->id2);
-        } 
+        }
 		else {
             if (idx > 0) printf(", ");
             if (!strncmp(sel_args->fields[idx], "id1", 3)) {
@@ -44,15 +45,15 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
         offset = 0;
     }
 	int flag = 0;
-	
-	///////       	UNFINISHED  		///////       	
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	
+
+	///////       	UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+
 	/*
 	for (int i = 0; i < cmd->cmd_args.sel_args.fields_len; i++){
 		if (!strncmp(cmd->cmd_args.sel_args.fields[i], "avg(id1)", 8)) {
@@ -178,13 +179,13 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				printf("%ld",table->len);
 			}
 		}
-		
+
 	}*/
-	
+
 	if(flag){
 		printf(")\n");
 	}
-	else{	
+	else{
 		if (idxList) {
 			for (idx = offset; idx < idxListLen; idx++) {
 				if (limit != -1 && (idx - offset) >= limit) {
@@ -192,7 +193,7 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				}
 				print_like(get_Like(table, idxList[idx]), &(cmd->cmd_args.sel_args));
 			}
-			
+
 		} else {
 			for (idx = offset; idx < table->len; idx++) {
 				if (limit != -1 && (idx - offset) >= limit) {
@@ -245,267 +246,174 @@ int handle_insert_cmd_like(Table_Like_t *table, Command_t *cmd) {
 
 
 
-	///////       	UNFINISHED  		///////       	
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
-	///////			UNFINISHED  		///////  
+	///////       	UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
+	///////			UNFINISHED  		///////
 size_t where_check_like(Table_Like_t *table, Command_t *cmd, int* idxList)
 {
-	// if (idxList == NULL)
-		// idxList = malloc(sizeof(int) * table->len);
-	// int operator_mat[10];
-	// int op_i = 0;
-	// int cond_mat[10];
-	// int cond_i = 0;
-	// double number_mat[10];
-	// char char_mat[10][100];
-	// int num_i = 0;
-	// int logic_mat[10];
-	// int logic_i = 0;
-	// size_t idxListLen = 0;
-	// int cond_begin = cmd->cmd_args.sel_args.where_begin;
-	// int cond_end = cmd->cmd_args.sel_args.where_end;
-	// int index_char = 0;
-	// int index_cmd = 0;
-	// while(index_cmd <= cond_end){
-		// char temp[200];
-		// index_char = 0;
-		// for (index_cmd = cond_begin ; index_cmd <= cond_end; index_cmd++)
-		// {
-			// if (!strncmp(cmd->args[index_cmd], "or", 2)){
-				// logic_mat[logic_i++] = 1;
-				// cond_begin = index_cmd +1;
-				// break;
-			// }
-			// else if (!strncmp(cmd->args[index_cmd], "and", 3)){
-				// logic_mat[logic_i++] = 2;
-				// cond_begin = index_cmd +1;
-				// break;
-			// }
-			// if(index_cmd == cond_begin)
-				// strcpy(temp,cmd->args[index_cmd]);
-			// else
-				// strcat(temp,cmd->args[index_cmd]);
-		// }
-		// if (!strncmp(temp, "id", 2))
-		// {
-			// index_char = 2;
-			// cond_mat[cond_i++] = 1;
-		// }
-		// if (!strncmp(temp, "name", 4))
-		// {
-			// index_char = 4;
-			// cond_mat[cond_i++] = 2;
-		// }
-		// if (!strncmp(temp, "email", 5))
-		// {
-			// index_char = 5;
-			// cond_mat[cond_i++] = 3;
-		// }
-		// if (!strncmp(temp, "age", 3))
-		// {
-			// index_char = 3;
-			// cond_mat[cond_i++] = 4;
-		// }
-		////////////////////////// logical operator ///////////////////////
-		// if (temp[index_char] == '=')
-		// {
-			// operator_mat[op_i++] = 1;
-		// }
-		// if (temp[index_char] == '!')
-		// {
-			// if(temp[index_char+1] == '='){
-				// operator_mat[op_i++] = 2;
-				// index_char++;
-			// }
-		// }
-		// if (temp[index_char] == '>')
-		// {
-			// if(temp[index_char+1] == '='){
-				// operator_mat[op_i++] = 5;
-				// index_char++;
-			// }
-			// else
-				// operator_mat[op_i++] = 3;
-		// }
-		// if (temp[index_char] == '<')
-		// {
-			// if(temp[index_char+1] == '='){
-				// operator_mat[op_i++] = 6;
-				// index_char++;
-			// }
-			// else
-				// operator_mat[op_i++] = 4;
-		// }
-		// index_char++;
-		/////////////////////////////////////////
-		// int temp_n = 0 ;
-		// int dot_n = 0 ; // number after dot
-		// int flag = 0;
-		// if(temp[index_char]=='"')
-		// {
-			// char *ptr = temp + index_char;
-			// strcpy(char_mat[num_i], ptr);
-			// num_i++;
-		// }
-		// else {
-			// while (temp[index_char] != 0)
-			// {
-				// if (flag)
-					// dot_n++;
-				// temp_n *= 10;
-				// temp_n += temp[index_char] - '0';
-				// index_char++;
-				// if (temp[index_char] == '.'){
-					// flag = 1;
-					// index_char++;
-				// }
-			// }
-			// double number = temp_n;
-			// if (flag)
-			// {
-				// for (int i = 0 ; i < dot_n ; i++)
-					// number /=10;
-			// }
-			// number_mat[num_i++] = number;
-		// }		
-	// }
-	////////////////////end translation /////////////////////////////
-	// if(op_i != cond_i || op_i != num_i || op_i != logic_i + 1)
-	// {
-		// printf("error op cond num error!\n");
-		// cmd->type = UNRECOG_CMD;
-		// return table->len;
-	// }
-	// for (int idx = 0 ; idx < table->len; idx++)
-	// {
-		// Like_t* User = get_Like(table, idx);
-		// int flag1 = 0 ;
-		// int flag2 = 0 ;
-		// for(int i = 0 ; i < op_i;i++){
-			// double number = number_mat[i];
-			// if (cond_mat[i] == 1){
-				// if(operator_mat[i]==1){
-					// if(User->id == number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==2){
-					// if(User->id != number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==3){
-					// if(User->id > number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==4){
-					// if(User->id < number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==5){
-					// if(User->id >= number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==6){
-					// if(User->id <= number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-			// }
-			// else if (cond_mat[i] ==2){
-				// if(operator_mat[i]==1){
-					// if(!strcmp(User->name,char_mat[i]))
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==2){
-					// if(strcmp(User->name,char_mat[i]))
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-			// }
-			// else if (cond_mat[i] == 3){
-				// if(operator_mat[i]==1){
-					// if(!strcmp(User->email,char_mat[i]))
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==2){
-					// if(strcmp(User->email,char_mat[i]))
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-			// }
-			// else if (cond_mat[i] ==4){
-				// if(operator_mat[i]==1){
-					// if(User->age == number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==2){
-					// if(User->age != number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==3){
-					// if(User->age > number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==4){
-					// if(User->age < number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==5){
-					// if(User->age >= number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-				// if(operator_mat[i]==6){
-					// if(User->age <= number)
-						// flag2 = 1;
-					// else
-						// flag2 = 0;
-				// }
-			// }
-			// if(i == 0)
-				// flag1 = flag2;
-			// else
-			// {
-				// if(logic_mat[i-1]==1)  // or
-					// flag1 |= flag2;
-				// else if (logic_mat[i-1]==2)
-					// flag1 &= flag2;
-			// }
-		// }
-		// if (flag1)
-			// idxList[idxListLen++] = idx;
-	// }
-	// return idxListLen;
-	return 0;
+  if (idxList == NULL)
+    idxList = malloc(sizeof(int) * table->len);
+  int operator_mat[10]; // relational_ops
+  int op_i = 0;
+  int cond_mat[10]; // user_fields
+  int cond_i = 0;
+  double number_mat[10];
+  char char_mat[10][100];
+  int num_i = 0;
+  int logic_mat[10]; // logical_ops
+  int logic_i = 0;
+  size_t idxListLen = 0;
+  int cond_begin = cmd->cmd_args.sel_args.where_begin;
+  int cond_end = cmd->cmd_args.sel_args.where_end;
+  int cond_len = cond_end - cond_begin + 1;
+  char cur_str[256];
+  for(int index_cmd = 0; index_cmd < cond_len; index_cmd++){
+    strcpy(cur_str, cmd->args[cond_begin + index_cmd]);
+    switch(index_cmd % 4){
+      case COND:
+        if (!strncmp(cur_str, "id1", 3))
+          cond_mat[cond_i++] = ID1;
+        else if (!strncmp(cur_str, "id2", 3))
+          cond_mat[cond_i++] = ID2;
+        else
+          printf("where-condition field err: %s\n", cur_str);
+        break;
+      case OP:
+        if (!strncmp(cur_str, "=", 1))
+          operator_mat[op_i++] = EQ;
+        else if (!strncmp(cur_str, "!=", 2))
+          operator_mat[op_i++] = NEQ;
+        else if (!strncmp(cur_str, ">=", 2))
+          operator_mat[op_i++] = GTE;
+        else if (!strncmp(cur_str, "<=", 2))
+          operator_mat[op_i++] = LTE;
+        else if (!strncmp(cur_str, ">", 1))
+          operator_mat[op_i++] = GT;
+        else if (!strncmp(cur_str, "<", 1))
+          operator_mat[op_i++] = LT;
+        else
+          printf("where-condition op err: %s\n", cur_str);
+        break;
+      case VALUE:
+          number_mat[num_i++] = atof(cur_str);
+        break;
+      case LOGIC:
+        if (!strncmp(cur_str, "or", 2))
+          logic_mat[logic_i++] = OR;
+        else if (!strncmp(cur_str, "and", 3))
+          logic_mat[logic_i++] = AND;
+        else
+          printf("where-condition logic op err: %s\n", cur_str);
+    }
+  }
+  //////////////////////end translation /////////////////////////////
+  if(op_i != cond_i || op_i != num_i || op_i != logic_i + 1)
+  {
+    printf("error op cond num error!\n");
+    cmd->type = UNRECOG_CMD;
+    return table->len;
+  }
+  for (int idx = 0 ; idx < table->len; idx++)
+  {
+    Like_t* Like = get_Like(table, idx);
+    int flag1 = 0 ;
+    int flag2 = 0 ;
+    for(int i = 0 ; i < op_i;i++){
+      double number = number_mat[i];
+      if (cond_mat[i] == ID1){
+        if(operator_mat[i]==EQ){
+          if(Like->id1 == number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==NEQ){
+          if(Like->id1 != number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==GT){
+          if(Like->id1 > number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==LT){
+          if(Like->id1 < number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==GTE){
+          if(Like->id1 >= number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==LTE){
+          if(Like->id1 <= number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+      }
+      else if (cond_mat[i] == ID2){
+        if(operator_mat[i]==EQ){
+          if(Like->id2 == number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==NEQ){
+          if(Like->id2 != number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==GT){
+          if(Like->id2 > number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==LT){
+          if(Like->id2 < number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==GTE){
+          if(Like->id2 >= number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+        if(operator_mat[i]==LTE){
+          if(Like->id2 <= number)
+            flag2 = 1;
+          else
+            flag2 = 0;
+        }
+      }
+      if(i == 0)
+        flag1 = flag2;
+      else
+      {
+        if(logic_mat[i-1]==OR)  // or
+          flag1 |= flag2;
+        else if (logic_mat[i-1]==AND)
+          flag1 &= flag2;
+      }
+    }
+    if (flag1)
+      idxList[idxListLen++] = idx;
+  }
+  return idxListLen;
 }
 
 

@@ -2,6 +2,11 @@
 #define LIKE_H
 #include "Command.h"
 
+enum like_fields{
+  ID1,
+  ID2
+};
+
 typedef struct Like {
     unsigned int id1;
     unsigned int id2;
