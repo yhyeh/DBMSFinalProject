@@ -233,15 +233,6 @@ int handle_insert_cmd_like(Table_Like_t *table, Command_t *cmd) {
 }
 
 
-
-
-	///////       	UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
 size_t where_check_like(Table_Like_t *table, Command_t *cmd, int* idxList)
 {
   if (idxList == NULL)
@@ -251,7 +242,7 @@ size_t where_check_like(Table_Like_t *table, Command_t *cmd, int* idxList)
   int cond_mat[10]; // user_fields
   int cond_i = 0;
   double number_mat[10];
-  char char_mat[10][100];
+  //char char_mat[10][100];
   int num_i = 0;
   int logic_mat[10]; // logical_ops
   int logic_i = 0;
@@ -424,7 +415,6 @@ int handle_select_cmd_like(Table_Like_t *table, Command_t *cmd) {
 		idxList = malloc(sizeof(int) * table->len);
 		size_t idxListLen;
 		idxListLen = where_check_like(table,cmd,idxList);
-		printf("idxListLen: %ld\n",idxListLen);
 		print_likes(table, idxList, idxListLen, cmd);
 		free(idxList);
     }
