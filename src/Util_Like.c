@@ -45,16 +45,6 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
         offset = 0;
     }
 	int flag = 0;
-
-	///////       	UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-	///////			UNFINISHED  		///////
-
-	/*
 	for (int i = 0; i < cmd->cmd_args.sel_args.fields_len; i++){
 		if (!strncmp(cmd->cmd_args.sel_args.fields[i], "avg(id1)", 8)) {
 			if (offset !=0 || limit == 0)
@@ -68,8 +58,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				double sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
-					Like_t* user = get_Like(table, idxList[idx]);
-					sum += user->id;
+					Like_t* like = get_Like(table, idxList[idx]);
+					sum += like->id1;
 				}
 				printf("%.3f",sum/idxListLen);
 			}
@@ -77,8 +67,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				double sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
-					Like_t* user = get_Like(table, idx);
-					sum += user->id;
+					Like_t* like = get_Like(table, idx);
+					sum += like->id1;
 				}
 				printf("%.3f",sum/table->len);
 			}
@@ -95,8 +85,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				double sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
-					Like_t* user = get_Like(table, idxList[idx]);
-					sum += user->age;
+					Like_t* like = get_Like(table, idxList[idx]);
+					sum += like->id2;
 				}
 				printf("%.3f",sum/idxListLen);
 			}
@@ -104,8 +94,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				double sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
-					Like_t* user = get_Like(table, idx);
-					sum += user->age;
+					Like_t* like = get_Like(table, idx);
+					sum += like->id2;
 				}
 				printf("%.3f",sum/table->len);
 			}
@@ -122,8 +112,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				int sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
-					Like_t* user = get_Like(table, idxList[idx]);
-					sum += user->id;
+					Like_t* like = get_Like(table, idxList[idx]);
+					sum += like->id1;
 				}
 				printf("%d",sum);
 			}
@@ -131,8 +121,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				int sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
-					Like_t* user = get_Like(table, idx);
-					sum += user->id;
+					Like_t* like = get_Like(table, idx);
+					sum += like->id1;
 				}
 				printf("%d",sum);
 			}
@@ -149,8 +139,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				int sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
-					Like_t* user = get_Like(table, idxList[idx]);
-					sum += user->age;
+					Like_t* like = get_Like(table, idxList[idx]);
+					sum += like->id2;
 				}
 				printf("%d",sum);
 			}
@@ -158,8 +148,8 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				int sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
-					Like_t* user = get_Like(table, idx);
-					sum += user->age;
+					Like_t* like = get_Like(table, idx);
+					sum += like->id2;
 				}
 				printf("%d",sum);
 			}
@@ -179,8 +169,7 @@ void print_likes(Table_Like_t *table, int *idxList, size_t idxListLen, Command_t
 				printf("%ld",table->len);
 			}
 		}
-
-	}*/
+	}
 
 	if(flag){
 		printf(")\n");
@@ -435,6 +424,7 @@ int handle_select_cmd_like(Table_Like_t *table, Command_t *cmd) {
 		idxList = malloc(sizeof(int) * table->len);
 		size_t idxListLen;
 		idxListLen = where_check_like(table,cmd,idxList);
+		printf("idxListLen: %ld\n",idxListLen);
 		print_likes(table, idxList, idxListLen, cmd);
 		free(idxList);
     }
