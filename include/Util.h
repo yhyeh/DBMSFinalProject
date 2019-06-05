@@ -2,6 +2,7 @@
 #define DB_UTIL_H
 #include "Command.h"
 #include "Table.h"
+#include "Table_Like.h"
 
 enum cond_stat{
   COND,
@@ -37,6 +38,7 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd);
 int handle_select_cmd(Table_t *table, Command_t *cmd);
 int handle_update_cmd(Table_t *table, Command_t *cmd);
 int handle_delete_cmd(Table_t *table, Command_t *cmd);
+int handle_join_cmd(Table_t *table1, Table_Like_t *table2, Command_t *cmd);
 void print_help_msg();
-size_t where_check(Table_t *table, Command_t *cmd, int* idxList);
+size_t where_check(Table_t *table, Command_t *cmd, int* idxList, char* user_need_join);
 #endif
