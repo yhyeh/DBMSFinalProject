@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "User.h"
 
-#define INIT_TABLE_SIZE 10000
+#define INIT_TABLE_USER_SIZE 100100
 #define EXT_LEN 500
 
 typedef struct Table {

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "Like.h"
 
-#define INIT_TABLE_SIZE 10000
+#define INIT_TABLE_LIKE_SIZE 10000
 #define EXT_LEN 500
 
 typedef struct Table_Like {

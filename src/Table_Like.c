@@ -10,12 +10,12 @@
 Table_Like_t *new_Table_Like(char *file_name) {
     Table_Like_t *table = (Table_Like_t*)malloc(sizeof(Table_Like_t));
     memset((void*)table, 0, sizeof(Table_Like_t));
-    table->capacity = INIT_TABLE_SIZE;
+    table->capacity = INIT_TABLE_LIKE_SIZE;
     table->len = 0;
     table->likes = (Like_t*)malloc(
-                            sizeof(Like_t) * INIT_TABLE_SIZE);
-    table->cache_map = (unsigned char*)malloc(sizeof(char)*INIT_TABLE_SIZE);
-    memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_SIZE);
+                            sizeof(Like_t) * INIT_TABLE_LIKE_SIZE);
+    table->cache_map = (unsigned char*)malloc(sizeof(char)*INIT_TABLE_LIKE_SIZE);
+    memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_LIKE_SIZE);
     table->fp = NULL;
     table->file_name = NULL;
     load_table_like(table, file_name);
@@ -106,7 +106,7 @@ int load_table_like(Table_Like_t *table, char *file_name) {
     }
     if (file_name != NULL) {
         table->len = 0;
-        memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_SIZE);
+        memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_LIKE_SIZE);
         if (stat(file_name, &st) != 0) {
             //Create new file
             table->fp = fopen(file_name, "wb");
@@ -139,7 +139,7 @@ Like_t* get_Like(Table_Like_t *table, size_t idx) {
     size_t archived_len;
     struct stat st;
     if (!table->cache_map[idx]) {
-        if (idx > INIT_TABLE_SIZE) {
+        if (idx > INIT_TABLE_LIKE_SIZE) {
             goto error;
         }
         if (stat(table->file_name, &st) != 0) {
@@ -160,4 +160,3 @@ Like_t* get_Like(Table_Like_t *table, size_t idx) {
 error:
     return NULL;
 }
-
