@@ -1,7 +1,7 @@
 #ifndef HASH_H
 #define HASH_H
 
-#define HASH_ENTRY_LEN 100000
+#define HASH_ENTRY_LEN 125000
 
 typedef struct Hash_Entry {
   unsigned int* uid_buf;  // user id array

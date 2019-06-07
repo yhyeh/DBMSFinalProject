@@ -33,10 +33,6 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 				add_select_field(cmd, cmd->args[arg_idx]);
 			} else if (!strncmp(ptr, "age)", 4)) {
 				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id1)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id2)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
 			}
 		}
 		else if (!strncmp(cmd->args[arg_idx],"sum(",4))
@@ -45,10 +41,6 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 			if (!strncmp(ptr, "id)", 3)) {
 				add_select_field(cmd, cmd->args[arg_idx]);
 			} else if (!strncmp(ptr, "age)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id1)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id2)", 4)) {
 				add_select_field(cmd, cmd->args[arg_idx]);
 			}
 		}
@@ -64,10 +56,6 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 			} else if (!strncmp(ptr, "email)", 6)) {
 				add_select_field(cmd, cmd->args[arg_idx]);
 			} else if (!strncmp(ptr, "age)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id1)", 4)) {
-				add_select_field(cmd, cmd->args[arg_idx]);
-			} else if (!strncmp(ptr, "id2)", 4)) {
 				add_select_field(cmd, cmd->args[arg_idx]);
 			}
 		}

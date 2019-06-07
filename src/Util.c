@@ -61,7 +61,7 @@ void print_user(User_t *user, SelectArgs_t *sel_args) {
 ///
 /// Print the users for given offset and limit restriction
 ///
-void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd) {
+void print_users(Table_t *table, size_t *idxList, size_t idxListLen, Command_t *cmd) {
     size_t idx;
     int limit = cmd->cmd_args.sel_args.limit;
     int offset = cmd->cmd_args.sel_args.offset;
@@ -134,22 +134,22 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
 			else
 				printf(", ");
 			if (idxList){
-				int sum = 0 ;
+				size_t sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
 					User_t* user = get_User(table, idxList[idx]);
 					sum += user->id;
 				}
-				printf("%d",sum);
+				printf("%ld",sum);
 			}
 			else{
-				int sum = 0 ;
+				size_t sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
 					User_t* user = get_User(table, idx);
 					sum += user->id;
 				}
-				printf("%d",sum);
+				printf("%ld",sum);
 			}
 		}
 		else if (!strncmp(cmd->cmd_args.sel_args.fields[i], "sum(age)", 8)){
@@ -161,22 +161,22 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
 			else
 				printf(", ");
 			if (idxList){
-				int sum = 0 ;
+				size_t sum = 0 ;
 				for (idx = 0 ; idx < idxListLen; idx++)
 				{
 					User_t* user = get_User(table, idxList[idx]);
 					sum += user->age;
 				}
-				printf("%d",sum);
+				printf("%ld",sum);
 			}
 			else{
-				int sum = 0 ;
+				size_t sum = 0 ;
 				for (idx = 0 ; idx < table->len; idx++)
 				{
 					User_t* user = get_User(table, idx);
 					sum += user->age;
 				}
-				printf("%d",sum);
+				printf("%ld",sum);
 			}
 		}
 		else if (!strncmp(cmd->cmd_args.sel_args.fields[i], "count(", 6)){
@@ -333,11 +333,11 @@ int handle_delete_cmd(Table_t *table, Command_t *cmd) {
 	else if(!strncmp(cmd->args[arg_idx], "where", 5)){
 		cmd->cmd_args.sel_args.where_begin = arg_idx+1;
 		cmd->cmd_args.sel_args.where_end = cmd->args_len - 1 ;
-		int *idxList = malloc(sizeof(int)* table->len);
+		size_t *idxList = malloc(sizeof(size_t)* table->len);
 		size_t idxListLen = where_check(table,cmd,idxList,NULL);
-		for (int idx = idxListLen -1 ; idx >=0 ; idx--)
+		for (size_t idx = idxListLen -1 ; idx >=0 ; idx--)
 		{
-			for(int i = idxList[idx] ; i < table->len -1 ; i++)
+			for(size_t i = idxList[idx] ; i < table->len -1 ; i++)
 			{
 				User_t* temp_u1 = get_User(table,i);
 				User_t* temp_u2 = get_User(table,i+1);
@@ -444,7 +444,7 @@ int handle_update_cmd(Table_t *table, Command_t *cmd) {
 
 	if (cmd->cmd_args.sel_args.where_begin != -1){
 		cmd->cmd_args.sel_args.where_end = cmd->args_len - 1;
-		int *idxList = malloc(sizeof(int)* table->len);
+		size_t *idxList = malloc(sizeof(size_t)* table->len);
 		size_t idxListLen = where_check(table,cmd,idxList,NULL);
 		for (size_t idx =0 ; idx<idxListLen; idx++){
 			User_t* user = get_User(table, idxList[idx]);
@@ -524,75 +524,100 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 /// directly handle join
 ///
 int handle_join_cmd(Table_t *user_table, Table_Like_t *like_table, Command_t *cmd){
-  // select count(*) from user join like on [id = id1] where [age > 20]
-  // 0      1        2    3    4    5    6   7  8 9    10
-  /*// for debugging
-  if(strncmp(cmd->args[4], "join", 4)) {
-    printf("Not join cmd.\n");
-    return UNRECOG_CMD;
-  }
-  else{
-    printf("Enter join cmd processing.\n");
-  }
-  // end of debugging
-  */
+	// select count(*) from user join like on [id = id1] where [age > 20]
+	// 0      1        2    3    4    5    6   7  8 9    10
+	/*// for debugging
+	if(strncmp(cmd->args[4], "join", 4)) {
+		printf("Not join cmd.\n");
+		return UNRECOG_CMD;
+	}
+	else{
+		printf("Enter join cmd processing.\n");
+	}
+	// end of debugging
+	*/
 
-  // Init
-  int arg_idx = 10;
-  Hash_t* hash_entry = (Hash_t*)malloc(sizeof(Hash_t)*HASH_ENTRY_LEN);
-  memset(hash_entry, 0, sizeof(Hash_t)*HASH_ENTRY_LEN);
-  size_t result_cnt = 0;
-  // check where conditions exist or not. As well as offset and limit.
-  if(!strncmp(cmd->args[arg_idx], "where", 5)){
-    where_state_handler(cmd, arg_idx+1);
-    where_check(user_table, cmd, NULL, hash_entry);
-  } else {
-    //-----------------------------------------------
-    // TODO:
-    // Add all user id to hash_entry
-    //-----------------------------------------------
-    if (!strncmp(cmd->args[arg_idx], "offset", 6)) {
-      offset_state_handler(cmd, arg_idx+1);
-    } else if (!strncmp(cmd->args[arg_idx], "limit", 5)) {
-      limit_state_handler(cmd, arg_idx+1);
-    }
-  }
-
-  // check join on id = id1 or id2
-  // then count
-  Like_t* Like;
-  Hash_t h_entry;
-  if(!strncmp(cmd->args[9], "id1", 3)){
-    for(size_t i = 0; i < like_table->len; i++){
-      Like = get_Like(like_table, i);
-      h_entry = hash_entry[Like->id1 % HASH_ENTRY_LEN];
-      for(size_t j = 0; j < h_entry.uid_buf_len; j++){
-        if(Like->id1 == h_entry.uid_buf[j]) result_cnt++;
-      }
-    }
-  }else if(!strncmp(cmd->args[9], "id2", 3)){
-    for(size_t i = 0; i < like_table->len; i++){
-      Like = get_Like(like_table, i);
-      h_entry = hash_entry[Like->id2 % HASH_ENTRY_LEN];
-      for(size_t j = 0; j < h_entry.uid_buf_len; j++){
-        if(Like->id2 == h_entry.uid_buf[j]) result_cnt++;
-      }
-    }
-  }
-
-  //-----------------------------------------------
-  // TODO:
-  // adjust count if offset or limit is set
-  //-----------------------------------------------
-
+	// Init
+	int arg_idx = 10;
+	cmd->cmd_args.sel_args.limit = -1;
+    cmd->cmd_args.sel_args.offset = -1;
+	cmd->cmd_args.sel_args.where_begin = -1;
+	cmd->cmd_args.sel_args.where_end = -1;
+	Hash_t* hash_entry = (Hash_t*)malloc(sizeof(Hash_t)*HASH_ENTRY_LEN);
+	memset(hash_entry, 0, sizeof(Hash_t)*HASH_ENTRY_LEN);
+	size_t result_cnt = 0;
+	// check where conditions exist or not. As well as offset and limit.
+	if(!strncmp(cmd->args[arg_idx], "where", 5)){
+		where_state_handler(cmd, arg_idx+1);
+		where_check(user_table, cmd, NULL, hash_entry);
+	} else {
+		//-----------------------------------------------
+		// finish
+		// Add all user id to hash_entry 
+		//-----------------------------------------------
+		for (size_t idx = 0 ; idx < user_table->len; idx++)
+		{
+			User_t* User = get_User(user_table, idx);
+			Hash_t* h_entry_ptr = &hash_entry[User->id % HASH_ENTRY_LEN];
+			unsigned int* new_uid_buf = (unsigned int*)malloc(sizeof(unsigned int)*(h_entry_ptr->uid_buf_len+1));
+			memcpy(new_uid_buf, h_entry_ptr->uid_buf, sizeof(unsigned int)*h_entry_ptr->uid_buf_len);
+			new_uid_buf[h_entry_ptr->uid_buf_len] = User->id;
+			if(h_entry_ptr->uid_buf != NULL)
+				free(h_entry_ptr->uid_buf);
+			h_entry_ptr->uid_buf = new_uid_buf;
+			h_entry_ptr->uid_buf_len++;
+		}
+		
+		if (!strncmp(cmd->args[arg_idx], "offset", 6)) {
+		  offset_state_handler(cmd, arg_idx+1);
+		} else if (!strncmp(cmd->args[arg_idx], "limit", 5)) {
+		  limit_state_handler(cmd, arg_idx+1);
+		}
+	}
+	int limit = cmd->cmd_args.sel_args.limit;
+    int offset = cmd->cmd_args.sel_args.offset;
+	if (offset == -1)
+		offset = 0;
+	if (offset !=0 || limit == 0){
+		return SELECT_CMD;
+	}
+	  // check join on id = id1 or id2
+	  // then count
+	Like_t* Like;
+	Hash_t h_entry;
+	if(!strncmp(cmd->args[9], "id1", 3)){
+		for(size_t i = 0; i < like_table->len; i++){
+			Like = get_Like(like_table, i);
+			h_entry = hash_entry[Like->id1 % HASH_ENTRY_LEN];
+			for(size_t j = 0; j < h_entry.uid_buf_len; j++){
+				if(Like->id1 == h_entry.uid_buf[j]){
+					result_cnt++;
+					break;
+				}
+			}
+		}
+	}
+	else if(!strncmp(cmd->args[9], "id2", 3)){
+		for(size_t i = 0; i < like_table->len; i++){
+			Like = get_Like(like_table, i);
+			h_entry = hash_entry[Like->id2 % HASH_ENTRY_LEN];
+			for(size_t j = 0; j < h_entry.uid_buf_len; j++){
+				if(Like->id2 == h_entry.uid_buf[j]){ 
+					result_cnt++;
+					break;
+				}
+			}
+		}
+	}
+	
   // print count(*)
   printf("(%lu)\n", result_cnt);
   return SELECT_CMD;
 }
-size_t where_check(Table_t *table, Command_t *cmd, int* idxList, Hash_t* hash_entry)
+size_t where_check(Table_t *table, Command_t *cmd, size_t* idxList, Hash_t* hash_entry)
 {
 	if (idxList == NULL)
-		idxList = malloc(sizeof(int) * table->len);
+		idxList = malloc(sizeof(size_t) * table->len);
 	int operator_mat[10]; // relational_ops
 	int op_i = 0;
 	int cond_mat[10]; // user_fields
@@ -605,11 +630,11 @@ size_t where_check(Table_t *table, Command_t *cmd, int* idxList, Hash_t* hash_en
 	size_t idxListLen = 0;
 	int cond_begin = cmd->cmd_args.sel_args.where_begin;
 	int cond_end = cmd->cmd_args.sel_args.where_end;
-  int cond_len = cond_end - cond_begin + 1;
-  char cur_str[256];
+	int cond_len = cond_end - cond_begin + 1;
+	char cur_str[256];
 	for(int index_cmd = 0; index_cmd < cond_len; index_cmd++){
-    strcpy(cur_str, cmd->args[cond_begin + index_cmd]);
-    switch(index_cmd % 4){
+		strcpy(cur_str, cmd->args[cond_begin + index_cmd]);
+		switch(index_cmd % 4){
       case COND:
         if (!strncmp(cur_str, "id", 2))
           cond_mat[cond_i++] = ID;
@@ -660,7 +685,7 @@ size_t where_check(Table_t *table, Command_t *cmd, int* idxList, Hash_t* hash_en
 		cmd->type = UNRECOG_CMD;
 		return table->len;
 	}
-	for (int idx = 0 ; idx < table->len; idx++)
+	for (size_t idx = 0 ; idx < table->len; idx++)
 	{
 		User_t* User = get_User(table, idx);
 		int flag1 = 0 ;
@@ -782,19 +807,21 @@ size_t where_check(Table_t *table, Command_t *cmd, int* idxList, Hash_t* hash_en
 			}
 		}
 		if (flag1){
-      if (hash_entry == NULL){
-        idxList[idxListLen++] = idx;
-      }else {
-        // append User->id to corresponding hash_entry
-        Hash_t* h_entry_ptr = &hash_entry[User->id % HASH_ENTRY_LEN];
-        unsigned int* new_uid_buf = (unsigned int*)malloc(sizeof(unsigned int)*(h_entry_ptr->uid_buf_len+1));
-        memcpy(new_uid_buf, h_entry_ptr->uid_buf, sizeof(unsigned int)*h_entry_ptr->uid_buf_len);
-        new_uid_buf[h_entry_ptr->uid_buf_len] = User->id;
-        free(h_entry_ptr->uid_buf);
-        h_entry_ptr->uid_buf = new_uid_buf;
-        h_entry_ptr->uid_buf_len++;
-      }
-    }
+			if (hash_entry == NULL){
+				idxList[idxListLen++] = idx;
+			}
+			else {
+				// append User->id to corresponding hash_entry
+				Hash_t* h_entry_ptr = &hash_entry[User->id % HASH_ENTRY_LEN];
+				unsigned int* new_uid_buf = (unsigned int*)malloc(sizeof(unsigned int)*(h_entry_ptr->uid_buf_len+1));
+				memcpy(new_uid_buf, h_entry_ptr->uid_buf, sizeof(unsigned int)*h_entry_ptr->uid_buf_len);
+				new_uid_buf[h_entry_ptr->uid_buf_len] = User->id;
+				if(h_entry_ptr->uid_buf != NULL)
+					free(h_entry_ptr->uid_buf);
+				h_entry_ptr->uid_buf = new_uid_buf;
+				h_entry_ptr->uid_buf_len++;
+			}
+		}
 	}
 	return idxListLen;
 
@@ -815,8 +842,8 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 		print_users(table, NULL, 0, cmd);
 	}
 	else {
-		int *idxList ;
-		idxList = malloc(sizeof(int) * table->len);
+		size_t *idxList ;
+		idxList = malloc(sizeof(size_t) * table->len);
 		size_t idxListLen;
 		idxListLen = where_check(table,cmd,idxList, NULL);
 		print_users(table, idxList, idxListLen, cmd);

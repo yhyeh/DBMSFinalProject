@@ -43,9 +43,9 @@ int main(int argc, char **argv) {
 			else if(cmd->type_table == LIKE_TB){
 				handle_query_cmd_like(table_like, cmd);
 			}
-      else if(cmd->type_table == JOIN_TB){
-        handle_join_cmd(table_user, table_like, cmd);
-      }
+			else if(cmd->type_table == JOIN_TB){
+				handle_join_cmd(table_user, table_like, cmd);
+			}
 		}
         cleanup_Command(cmd);
         clean_InputBuffer(input_buffer);
