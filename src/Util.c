@@ -327,6 +327,7 @@ int handle_delete_cmd(Table_t *table, Command_t *cmd) {
         return ret;
 	}
 	size_t arg_idx = 3;
+	// printf("table->len %ld\n",table->len);
 	if (arg_idx == cmd->args_len){
 		table->len = 0;
 	}
@@ -335,14 +336,12 @@ int handle_delete_cmd(Table_t *table, Command_t *cmd) {
 		cmd->cmd_args.sel_args.where_end = cmd->args_len - 1 ;
 		size_t *idxList = malloc(sizeof(size_t)* table->len);
 		size_t idxListLen = where_check(table,cmd,idxList,NULL);
-		for (size_t idx = idxListLen -1 ; idx >=0 ; idx--)
+	
+		for (size_t idx = idxListLen ; idx != 0 ; idx--)
 		{
-			for(size_t i = idxList[idx] ; i < table->len -1 ; i++)
+			for(size_t i = idxList[idx-1] ; i < table->len -1 ; i++)
 			{
-				User_t* temp_u1 = get_User(table,i);
-				User_t* temp_u2 = get_User(table,i+1);
-				memcpy((table->users)+i, temp_u2, sizeof(User_t));
-				memcpy((table->users)+i+1, temp_u1, sizeof(User_t));
+				memcpy((table->users)+i, (table->users)+i+1, sizeof(User_t));
 			}
 			table->len--;
 		}
@@ -616,8 +615,8 @@ int handle_join_cmd(Table_t *user_table, Table_Like_t *like_table, Command_t *cm
 }
 size_t where_check(Table_t *table, Command_t *cmd, size_t* idxList, Hash_t* hash_entry)
 {
-	if (idxList == NULL)
-		idxList = malloc(sizeof(size_t) * table->len);
+	// if (idxList == NULL)
+		// idxList = malloc(sizeof(size_t) * table->len);
 	int operator_mat[10]; // relational_ops
 	int op_i = 0;
 	int cond_mat[10]; // user_fields
