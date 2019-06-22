@@ -16,3 +16,6 @@ $ git push
 ### Next time you come back
 ```$ git pull --rebase```
 then start to work on it
+
+
+sed -i 's/db > //g' t*.txt
